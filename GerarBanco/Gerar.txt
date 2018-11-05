@@ -1,0 +1,6 @@
+-- ATUALIZAR
+dotnet restore
+-- GERAR CONTROLLER QUARTO
+dotnet aspnet-codegenerator controller -name QuartoController -m Quarto -dc ProjRelMVCDotNetCoreContext --relativeFolderPath Controllers --useDefaultLayout --referenceScriptLibraries
+-- GERAR CONTROLLER HOTEL
+dotnet aspnet-codegenerator controller -name HotelController -m Hotel -dc ProjRelMVCDotNetCoreContext --relativeFolderPath Controllers --useDefaultLayout --referenceScriptLibraries
