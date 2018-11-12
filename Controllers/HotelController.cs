@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -22,15 +23,8 @@ namespace ProjRelMVCDotnetCore.Controllers
         // GET: Hotel
         public async Task<IActionResult> Index()
         {
-
-            List<Quarto> lstQuartos = new List<Quarto>();
-            lstQuartos.Add(new Quarto{ID=1,Descricao="Exemplo1"});
-            lstQuartos.Add(new Quarto{ID=2,Descricao="Exemplo2"});
-            lstQuartos.Add(new Quarto{ID=3,Descricao="Exemplo3"});
-
-            //var lista= new SelectList(lstQuartos);
-            ViewBag.ListaQuartos = new SelectList(lstQuartos, "Id", "Descricao").Items;
-            return View(await _context.Hotel.ToListAsync());
+            var lista = await _context.Hotel.ToListAsync();
+            return View(lista);
         }
 
         // GET: Hotel/Details/5
@@ -54,6 +48,9 @@ namespace ProjRelMVCDotnetCore.Controllers
         // GET: Hotel/Create
         public IActionResult Create()
         {
+            //ViewBag.ListaQuartos = new SelectList(GetQuartos(), "Id", "Descricao").Items;
+           // ViewData["listaQuartos"] = new SelectList(GetQuartos(), "Id", "Descricao").Items;
+           ViewData["Quarto"] = new SelectList(_context.Quarto.ToList(), "Id", "Descricao").Items;
             return View();
         }
 
@@ -62,10 +59,14 @@ namespace ProjRelMVCDotnetCore.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Descricao")] Hotel hotel)
+    public async Task<IActionResult> Create([Bind("ID,Descricao,Quarto")] Hotel hotel, IFormCollection collection)
         {
+            int idQuarto = Convert.ToInt16(collection["Quarto"]);
+
             if (ModelState.IsValid)
             {
+                var quarto = await _context.Quarto.FindAsync(idQuarto);
+                hotel.Quarto = quarto;
                 _context.Add(hotel);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -156,6 +157,10 @@ namespace ProjRelMVCDotnetCore.Controllers
         private bool HotelExists(int id)
         {
             return _context.Hotel.Any(e => e.ID == id);
+        }
+
+        private List<Quarto> GetQuartos(){
+            return _context.Quarto.ToList();
         }
     }
 }

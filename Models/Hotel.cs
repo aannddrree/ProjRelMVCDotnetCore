@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProjRelMVCDotnetCore.Models
 {
@@ -7,5 +8,7 @@ namespace ProjRelMVCDotnetCore.Models
         public int ID { get; set; }
         public string Descricao { get; set; }
         public Quarto Quarto { get; set; }
+
     }
+
 }
