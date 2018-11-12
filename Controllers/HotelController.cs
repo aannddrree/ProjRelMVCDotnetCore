@@ -23,8 +23,8 @@ namespace ProjRelMVCDotnetCore.Controllers
         // GET: Hotel
         public async Task<IActionResult> Index()
         {
-            var lista = await _context.Hotel.ToListAsync();
-            return View(lista);
+            //var lista = await _context.Hotel.ToListAsync();
+            return View(await _context.Hotel.Include(hotel => hotel.Quarto).ToListAsync());
         }
 
         // GET: Hotel/Details/5
